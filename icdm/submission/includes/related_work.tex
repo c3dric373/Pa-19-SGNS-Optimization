@@ -56,7 +56,7 @@ g(w,c,t) = u^T \sigma(w^TM^{[1:k]}t+V_c^T(w \oplus t) + b_c)
 where, $u, V_c, b_c$ are standard parameters for a neural network. $\oplus$ is the vector concatenation. The most important parameter is $M^{[1:k]}$, which is a tensor layer, the tensor layer is used because of its ability to model multiple interactions in the data, as this will be useful for multiple contexts. They used SGD for the optimization of this objective function. They achieved interesting results as shown in \ref{fig:multipleContext}.\\
 \begin{figure}[ht]
 \centering
-\includegraphics[scale=0.7]{images/multipleContext.png}
+\includegraphics[scale=0.5]{images/multipleContext.png}
 \caption{"Nearest neighbor words model and Skip-
 Gram. The first line in each block is the results of Skip-Gram;
 and the rest lines are the results of our model" \cite{contextWithTensor}}
