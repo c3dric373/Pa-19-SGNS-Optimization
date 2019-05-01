@@ -9,7 +9,7 @@ As seen in Figure \ref{fig:results_sgd}, for almost every learning rate the conv
 
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.45]{images/results_sgd_shuffle}
+\includegraphics[scale=0.3]{images/results_sgd_shuffle}
 \caption{Training time Stochastic Gradient Descent with input Shuffling}
 \label{fig:results_sgd}
 \end{figure}
@@ -17,26 +17,24 @@ As seen in Figure \ref{fig:results_sgd}, for almost every learning rate the conv
 Momentum and NAG \cite{nag} both have an additional hyperparameter $\gamma$, that, as described in Section \ref{optimizers}, defines the percentage of the previous gradient that will be added to the current gradients. We set $\gamma = 0.9$ as this is the typical value and did not alter it during our experiments. Momentum and Nesterov alone respectively only slightly decrease or increase the convergence time. Momentum optimally converges in 9 epochs and Nesterov in 13. If we combine these optimizers with input shuffling, interestingly the same phenomena as with plain SGD appear. The convergence time gets better, 8 epochs for Momentum and 3 epochs for NAG. The phenomena that a higher learning rat yields better results also happens with both of the optimizers. As Momentum does not converge in 20 epochs with a learning rate of 0.002 but does in 8 with input shuffling.
 \begin{figure}[h]
 \centering
-\begin{minipage}{.5\textwidth}
-\centering
+
 \includegraphics[scale=0.3]{images/results_mom_shuffle}
 \caption{Training time Momentum with input Shuffling}
 \label{fig:results_mom}
-\label{fig:test1}
-\end{minipage}%
-\begin{minipage}{.5\textwidth}
+\end{figure}
+
+\begin{figure}[h]
 \centering
 \includegraphics[scale=0.3]{images/results_nag_shuffle}
 \caption{Training time Nesterov with input Shuffling}
 \label{fig:results_nag}
-\end{minipage}
 \end{figure}
 \subsubsection{Adagrad}
 Adagrad \cite{adagrad} is a very interesting tool for learning word embeddings as it decreases the learning rate for very frequent occurring features, and vice versa (this is explained in detail in Section \ref{ssec:adagrad}). Because words that appear very frequently often do not have a semantic gain that is as important as words that appear less frequently to their context words, it's good to have a lower learning rate. So, in theory, Adagrad is particularly well suited for our task. This was confirmed empirically as our model converged in 4 epochs. When combined with shuffling Adagrad only took 3 epochs to converge. This shows the tendency of the skip gram model to converge faster with input shuffling and the big impact of having different learning rate for each feature.
 Here it's interesting to notice that a higher learning rate combined with input shuffling did not yield better results than without shuffling. Both of our best results happened with a learning rate of $0.1$, as shown in Figure \ref{fig:results_adagrad_shuffle}.
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.45]{images/results_adagrad_shuffle}
+\includegraphics[scale=0.3]{images/results_adagrad_shuffle}
 \caption{Training time Adagrad with input Shuffling}
 \label{fig:results_adagrad_shuffle}
 \end{figure}
