@@ -1,6 +1,6 @@
 
 \section{Background}\label{chap:background}
-
+\iffalse
 \begin{table*}[tb]\centering
     \caption{Sample Caption}
     %\scriptsize
@@ -24,6 +24,8 @@
    \end{tabular}%
    \label{tab:sample_label}%
 \end{table*}
+
+\fi
 This subsection gives an overview of the SGM and related work on its optimization. Furthermore, the used optimizers in our experiments are explained.
 \subsection{The Skip-Gram Model}
 The SGM is a very simple model used to learn WE. The idea is to train the model, a neural network, on a fake task and then use some of the weights of the neural network as embeddings. To understand this fake task center and context words must be defined. The center word is any given word in a sentence, from which we want to learn the WE. The context words of this specific center word are the words left and right in a given window $m$ in the sentence. See Figure \ref{fig:window_ex} as an example, where the context words are highlighted. An important thing to notice, is that instead of having a fixed window size $m$, each word will randomly have a window size between $1$ and $m$. The idea behind having different window sizes is that words that are further away in the sentence, have less semantic correlation to the center word.
