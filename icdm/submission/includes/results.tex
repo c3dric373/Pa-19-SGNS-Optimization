@@ -167,14 +167,25 @@ In theory Adadelta \cite{adadelta} should outperform Adagrad as it's an extensio
 \centering
 \begin{tabular}{|l|l|l|}
 \hline
-Adadelta Model & Convergence Time & Word similarity \\ \hline
-Without Shuffling & 20 & 0.59 \\ \hline
-With Shuffling & 3 & 0.59 \\ \hline
+
 \end{tabular}
-\caption{Convergence Time and Quality with Adadelta}
-\label{table:results_adadelta}
+\caption{}
+\label{}
 \end{table}
 
+\begin{table}[tb]
+    \caption{Convergence Time and Quality with Adadelta}
+    %\scriptsize
+    \begin{tabular}{l r r }%
+        \toprule
+Adadelta Model & Convergence Time & Word similarity \\ 
+        \midrule%
+        Without Shuffling & 20 & 0.59 \\ 
+With Shuffling & 3 & 0.59 \\
+        \midrule%
+   \end{tabular}%
+   \label{table:results_adadelta}%
+\end{table}
 
 \subsubsection{Adam}
 Adam is the most advanced of all the optimizers used in our experiments and did yield the best results as seen in Figure \ref{fig:results_adam_shuffle}. Adam converged in 3 epochs without shuffling and 2 with. This is the best result that we got with any optimizer.  It's also interesting to note that as same as with Adagrad it did not react to input shuffling the same way as SGD did. In fact, it worked in the opposite direction, as we achieved our best result with input shuffling while having a lower learning rate $0.001$ then we used to achieve the best result without input shuffling $0.05$.
