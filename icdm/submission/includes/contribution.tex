@@ -1,8 +1,9 @@
 \section{Batched SkipGramModel} \label{ssec:b_SGM}
 This section will give an overview of our implementation. The proposed implementation is a slighlty altered version of the original SGNS. The idea behind this altering, is to compute the loss for multiple words and context pairs at the same time, this is inspired from mini-batch training, a model often used in other machine learning problem. Instead of computing the loss function of each pair, we computed the sum over a certain number of pairs (i.e 2000) as a loss. The exact process will be described in the following paragraph.
+
 \subsection{Forwarding}
 As this represents the challenging part of our Implementation the forwarding method is explained step by step. Each time step is illustrated to make the explanation clearer.\\
-Let $X = {(v_1,c_1),(v_2,c_2),(v_3,c_3)}$, be the training batch, where $(v_i,c_i)$ is a training sample constituted by a word and on of its context words. \\
+Let $X = {(v_1,c_1),(v_2,c_2),(v_3,c_3)}$, be the training batch, where $(v_i,c_i)$ is a training sample constituted by a word and one of its context words. \\
 \textit{Input:}\\
 The forwarding method will accept two vectors $v$ and $c$, and a matrix $A$ as an input. The first vector represents all the center words in a batch, the second one the context words. The Matrix represents the negative samples. The two vectors are of the same length, defined as $n$. The matrix must be of dimension $n \times k$, with $k$ being the number of negative samples per pair. This means the $i^{th}$ row will store the negative samples for the $i^{th}$ word context pair.\\
 The input can be illustrated as follows: \\
@@ -44,7 +45,7 @@ $E_c = \begin{bmatrix}
 where each entry of the matrix is a vector of dimension $d$\\
 
 \textit{Batch multiplication and negation of samples:}\\
-Now we need to compute the dot product of each word vector with its pair and the negative samples, exactly as done as in the original loss function of Mikolov et al. shown in Equation \ref{eq:obj_neg_samples}. For this task some definitions are necessary: let $A_j$ be the $j^th$ row of the matrix A, let $E_c(i,j)$ be the $d$ dimensional embedding of the word stored in $\tilde{A}(i,j)$. The dot product is computed with a so-called batch multiplication\footnote{Documentation: https://pytorch.org/docs/stable/torch.html\#torch.bmm} which will result in a matrix $S$ where $S(i,j) = E_c(i,j) \cdot A_j$. This will result in a $n\times k+1$ Matrix $S$. Now we only have to negate the last $k$ rows with minus one. The sum of each row represents the loss computed in Equation \ref{eq:obj_neg_samples}, for each word context pair.
+Now we need to compute the dot product of each word vector with its pair and the negative samples, exactly as done as in the original loss function of Mikolov et al. shown in Equation \ref{eq:obj_neg_samples}. For this task some definitions are necessary: let $A_j$ be the $j^th$ row of the matrix A, let $E_c(i,j)$ be the $d$ dimensional embedding of the word stored in $\tilde{A}(i,j)$. The dot product is computed with a so-called batch multiplication\footnote{Documentation: https://pytorch.org/docs/stable/torch.html\#torch.bmm} which will result in a matrix $S$ where $S(i,j) = E_c(i,j) \cdot {E_v}_j$. This will result in a $n\times k+1$ Matrix $S$. Now we only have to negate the last $k$ rows with minus one. The sum of each row represents the loss computed in Equation \ref{eq:obj_neg_samples}, for each word context pair.
 Since computation time is too long with this approach the loss function is altered\\
 $S = \begin{bmatrix}
 \tilde{v_1} \cdot \tilde{c_1} & -\tilde{v_1} \cdot \tilde{k_{1,1}} & -\tilde{v_1} \cdot \tilde{k_{2,1}}& -\tilde{v_1} \cdot \tilde{k_{3,1}}\\
