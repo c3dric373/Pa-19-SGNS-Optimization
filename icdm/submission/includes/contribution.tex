@@ -1,4 +1,4 @@
-\section{Batched SkipGramModel} \label{ssec:b_SGM}
+\section{Batched SkipGramModel} \label{sec:contribution}
 This section will give an overview of our implementation. The proposed implementation is a slighlty altered version of the original SGNS. The idea behind this altering, is to compute the loss for multiple words and context pairs at the same time, this is inspired from mini-batch training, a model often used in other machine learning problem. Instead of computing the loss function of each pair, we computed the sum over a certain number of pairs (i.e 2000) as a loss. The exact process will be described in the following paragraph.
 
 \subsection{Forwarding}
