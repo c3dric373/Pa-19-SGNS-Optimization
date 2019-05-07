@@ -106,7 +106,7 @@ Word1 & Word2 & Score \\ \hline
 \end{table}
 
 
-\subsection{Configuration of the network}
+\subsection{Configuration of the network}\label{ssec:config}
 The skip gram model has a lot of possible parameters, that can be tuned. We experimented with different models and finally decided for one that we tried to optimize. This subsection will give a short overview of each parameter, where we will explain the process in which we chose the value of the given parameter. The explanation of the parameters will be structured as follows:
 \texttt{Parameter} - Description and tuning - \textit{Value}
 \begin{itemize}
@@ -134,7 +134,7 @@ Embedding Size & Word Similarity on Gensim \\ \hline
 \label{table:gensim_emb_size}
 \end{table}
 \fi
-\subsection{Input Shuffling}
+\subsection{Input Shuffling}\label{ssec:shuffling}
 We used input shuffling as a technique to optimize the SGM.  We will first describe input shuffling in a general way and then explain why we supposed that input shuffling could work well on the SGM. \\
 Let $X = {x_1...x_n}$ be our input data set. Input Shuffling describes the process of taking a random permutation of the dataset as an input at each epoch.
 The idea behind this technique is to present our optimizer with different  surfaces of our loss function, in other to find the best optimum. Therefore, it's easier for the neural network to escape a local minimum. As for example if a network had converged to a local minimum after one epoch it probably cannot escape it. But if we change the shape of the loss function, by input shuffling, then there would be a greater probability for the network to escape the local minimum.
