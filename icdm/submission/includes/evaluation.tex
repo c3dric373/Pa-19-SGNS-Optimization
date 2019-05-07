@@ -1,11 +1,11 @@
-';\'\section{Evalutation}\label{chap:results}
+\section{Evaluation}\label{chap:results}
 
 %Describe the experimental setup, the used datasets/parameters and the experimental results achieved
 
-This subsection gives an overview of the used datasets, the used metric to evaluate our models, the configuration of our model and finally, the experimental results achieved.
+This section gives an overview of the used datasets, the used metric to evaluate our models, the configuration of our model, and finally an explanation about inputa shuffling
 
 \subsection{Dataset}\label{sec:dataset}
-In this implementation we only used the text8 \footnote{http://mattmahoney.net/dc/enwik8.zip} dataset. We chose this dataset for two reasons. First of all, it's a very small dataset, that allowed us to do a lot of computations. Secondly, this dataset was used in related work \cite{intel} hence giving us a very good benchmark. The text8 dataset consists of 1702 lines of 1000 words, with a vocabulary of roughly 63000 words. Conveniently, there is no punctuation in the dataset. Therefore, we had to choose between building arbitrary sentences and keeping the dataset as it is. We chose the first option because it gives us a faster computation time, and did not show any significant loss in quality empirically, as shown in Table \ref{table:with_20}. We chose a length of sentences of 20. Furthermore, we applied a technique called subsampling to reduce the data set size, which is explained in the following subsection.
+In this implementation we only used the text8 \footnote{http://mattmahoney.net/dc/enwik8.zip} dataset. We chose this dataset for two reasons. First of all, it's a small dataset, that allowed us to do a lot of computations. Secondly, this dataset was used in related work \cite{intel} hence giving us a very good benchmark. The text8 dataset consists of 1702 lines of 1000 words, with a vocabulary of roughly 63000 words. Conveniently, there is no punctuation in the dataset. Therefore, we had to choose between building arbitrary sentences and keeping the dataset as it is. We chose the first option because it gives us a faster computation time, and did not show any significant loss in quality empirically, as shown in Table \ref{table:with_20}. We chose a length of sentences of 20. Furthermore, we applied a technique called subsampling to reduce the data set size, which is explained in the following subsection.
 
 \begin{table}[tb]
     \caption{Training and Convergence time according to choice of the length of sentences in text8 datasetCaption}
@@ -25,13 +25,14 @@ Word Similarity& 0.65 & 0.66 & 0.66 & 0.66 \\ \hline
 
 
 \subsubsection{Subsampling}
-Subsampling is a technique introduced by Mikolov et al. \cite{mikolov} to reduce the dataset size while at the same time increasing the quality of the dataset, i.e getting better word embeddings with it. The idea behind subsampling is the removal of very frequent words such as: "the, as, it, of". These words do not give an intrinsic value to the words that appear in its context. Therefore, the goal of subsampling is to delete such words from the dataset. This will decrease the computation time, as it will reduce the number of training samples, and should, in theory, increase the accuracy of the model. The increase in accuracy can also be explained by the fact that words that would not have appeared in the context of each other, may now do because words between have been deleted.
-To choose which word to delete, Mikolov et al. \cite{mikolov2} chose the following equation to compute the deletion of a word $w$ in the data set:
+Subsampling is a technique introduced by Mikolov et al. \cite{mikolov} to reduce the dataset size while at the same time increasing the quality of the dataset, i.e getting better word embeddings with it. The idea behind subsampling is the removal of very frequent words such as: "the, as, it, of". These words do not give an intrinsic value to the words that appear in its context. Therefore, the goal of subsampling is to delete such words from the dataset. Subsampling will decrease the computation time, as it will reduce the number of training samples, and should, in theory, increase the accuracy of the model. The increase in accuracy can also be explained by the fact that words that would not have appeared in the context of each other, may now do because words between have been deleted.
+To choose which word to delete, Mikolov et al. \cite{mikolov2} chose the following equation to compute the probability of a word $w$  to be deleted from the data set:
 \begin{equation} \label{eq:sampling}
 P(w) = 1- \sqrt{{\frac{t}{f(w)}}}
 \end{equation}
 
-where $f(w)$ is the frequency of w, and $t$ is a threshold set empirically. As Equation \ref{eq:sampling} is a probability, subsampling is not a deterministic procedure, words that may have been deleted with a threshold of $10^-2$ may stay in the dataset with a lower threshold, as shown in Table \ref{table:treshold_examples}. Mikolov et al. recommend a value between $0$ and $10^{-5}$, depending on the size of the dataset. We experimented with different values and $10^{-4}$ seemed the most suited. We did this by looking at a random set of sentences and judging the results manually. An example of the first sentence with different sampling thresholds can be found in Table \ref{table:treshold_examples}. The table shows the first 20 words of our dataset, without the words that were subsampled according to a threshold sample. Stats about subsampling can be found in Table \ref{table:treshold}.
+where $f(w)$ is the frequency of w, and $t$ is a threshold set empirically. Mikolov et al. recommend a value between $0$ and $10^{-5}$, depending on the size of the dataset. We experimented with different values and $10^{-4}$ seemed the most suited. We did this by looking at a random set of sentences and judging the results manually. 
+As Equation \ref{eq:sampling} is a probability, subsampling is not a deterministic procedure, words that may have been deleted with a threshold of $10^-2$ may stay in the dataset with a lower threshold. An example of the first sentence with different sampling thresholds can be found in Table \ref{table:treshold_examples}. The table shows the first 20 words of our dataset, without the words that were subsampled according to a threshold sample. Stats about subsampling can be found in Table \ref{table:treshold}.
 \begin{table}[h]
 \centering
 \begin{tabular}{|l|l|l|l|l|l|}
@@ -47,10 +48,9 @@ where $f(w)$ is the frequency of w, and $t$ is a threshold set empirically. As E
     \begin{tabular}{l r r r r r}%
         \toprule
 Sampling Treshhold & 0 & $ 10^{-1}$&$ 10^{-2}$& $10^{-3} $ &$10^{-4} $ \\ 
-
         \midrule%
 Words in Dataset  & 16mio & 15mio & 11mio & 8mio & 4mio \\ 
-        \midrule%
+        \bottomrule%
    \end{tabular}%
    \label{table:with_20}%
 \end{table}
@@ -75,7 +75,7 @@ $10^{-5}$ & against radicals diggers \\ \hline
 
 
 \subsubsection{Min count}
-We also deleted every word that did not appear more than 5 times in our dataset. We got this technique from Gensim \cite{gensim}, that introduced this parameter into their training. This is a good technique because of three reasons: First certain words of our data sets do not appear in a common lexicon (twigleg, melqu), or come from a foreign language (Volksvereinigung), or are names and acronyms. Secondly, each document often has spelling mistakes, those (as long as the same spelling mistake does not appear too often, what should be avoided in practice) would be deleted by sampling too, as the words do not have any meaning. Lastly, a word that only appears one time in our dataset will be very dependent on its original initialization. This is the case because it will only be updated with its context pairs once, which is only a dozen of times in practice and then won't be updated anymore. For all the above reasons, we applied this technique. Similar to subsampling, it should in theory improve the quality of the word embeddings and will decrease the computation time.
+We also deleted every word that did not appear more than 5 times in our dataset. This idea was also introduced by Mikolove et al. \cite{mikolov2}. This is a good technique because of three reasons: First certain words of our data sets do not appear in a common lexicon (twigleg, melqu), or come from a foreign language (Volksvereinigung), or are names and acronyms. Secondly, each document often has spelling mistakes, those (as long as the same spelling mistake does not appear too often, what should be avoided in practice) would be deleted by sampling too, as the words do not have any meaning. Lastly, a word that only appears one time in our dataset will be very dependent on its original initialization. This is the case because it will only be updated with its context pairs once, which is only a dozen of times in practice and then won't be updated anymore. For all the above reasons, we applied this technique. Similar to subsampling, it should in theory improve the quality of the word embeddings and will decrease the computation time.
 
 \subsection{Evaluating word embedings}
 Evaluating word embedding is not an easy task, such as evaluating the accuracy of a common classifier. We cannot split our data set into train and test set. As the task that the network is learning is of no interest to us. Therefore, we need to verify that our embedding is of quality with other techniques. To define quality we first need to define a measure of similarity between two vectors. This requires knowledge of the Cosine distance, which is introduced in the following subsection.
