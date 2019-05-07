@@ -57,4 +57,4 @@ $S = \begin{bmatrix}
 Summing the matrix $S$ and multiplying it with $-1$ (to make the problem a minimizing problem) results in the loss for our entire batch. As some words may appear more than once in the batch this will more be an average of it than as with Mikolov et al. \cite{mikolov2} the exact update per pair. \\
 L = $- \sum_{(i,j) \in k \times n} S(i,j) $\\
 
-This algorithm provides a way to compute the loss, to make the implementation successful, one still needs to access the context-pairs. The process of doing so is described in the next paragraph.
+This finishes the description of our batched approach. The next section will describe our experimental setting and the possibilities that exists to evaluate the quality of word embeddings. 
