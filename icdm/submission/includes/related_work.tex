@@ -15,25 +15,23 @@ The general idea is to cache the most frequently used weight vectors, and update
 This work proposes a very good way to parallelize the SGM, as in particular, it allows using more cores during the computation. As this approached focused on the Hierarchical softmax, in contrast to our work which used negative sampling, the next subsection covers optimizations of the Skip-Gram Model with negative sampling(SGNS).
 
 \subsection{Parallization in shared and Distributed Memory}
-In contrast to the above approach, this one, introduced by Ji et al. \cite{intel} focused on the Skip-Gram Model with negative sampling. The focus of this work wasto reduce the cost of our vector to  vector multiplication in our loss funcion, see Equation \ref{eq:obj_neg_samples}, where the dot product of the word vector and the negative sampled as well as the context word is computed.
-The main idea in this paper is to convert the level 1-BLAS (Basic Linear Subprogram) vector to vector operations to a level 3-BLAS matrix multiplication operation, which are efficiently implemented into hardware and consequently faster. This is achieved, by using the same negative samples for each context word of a given word $w$. Instead of using for each context word a vector to vector multiplication we can transform this into a matrix multiplication, under the assumption that we will not lose accuracy by sharing the same negative samples. The matrix multiplication can be represented in the following way.
+In contrast to the above approach, this one, introduced by Ji et al. \cite{intel} focused on the Skip-Gram Model with negative sampling. The focus of this work was to reduce the cost of our vector to  vector multiplication in our loss funcion, see Equation \ref{eq:obj_neg_samples}, where the dot product of the word vector and the negative sampled as well as the context word is computed.
+The main idea in this paper is to convert the level 1-BLAS (Basic Linear Subprogram) vector to vector operations to a level 3-BLAS matrix multiplication operation, which are efficiently implemented into hardware and consequently faster. To achieve such a transformation, Ji et al. decided to use the same negative samples for given amount of training samples. The training samples that will have the same negative samples are chosen as follows: given a word $w_c$ one can construct all the training samples where $w_c$ is a context word. This will result in the following training batch $X = \{({w_{in}}^i, w_c) | w_c~appears~in~the~context~of~{w_{in}}^i\}$. The matrix multiplication can be represented in the following way.
 \[
 \begin{bmatrix}
-w \\
+w_c \\
 w_{n_1} \\
 \vdots \\
 w_{n_k}\\
 \end{bmatrix}
 *
 \begin{bmatrix}
-w_{c_1}\\
+w_{in}^1\\
 \vdots\\
-w_{c_{2m}}\\
+{w_{in}}^{2m}\\
 \end{bmatrix}
 \]
-
-where $w$ is our given word, $w_{n_1}...w_{n_k}$ are the shared negative samples, with $k \in [5,20]$, and $w_{c_1}...w_{c_2m}$ are the words inside of the context window $m$ of $w$, with $m \in [10,20]$, also called a batch of input context words. After each batch the model updates the weights of the used vectors.
-This model achieves a 3.6 fold increase in throughput, by only losing 1\% of accuracy. An aspect that is not as useful to us is that the experiments were done on CPU, as modern GPU's are often used in many machine learning libraries, as with CUDA for example, there still need work to be done to optimize it with GPU's. This was done by Seulki and Youngmin \cite{gpu}, which is described in the next subsection.
+where, $w_{n_1}...w_{n_k}$ are the shared negative samples. The above Matrix multiplication will compute the loss for each training sample and the weights of the used vectors will be updated after each batch. This method achieves a 3.6 fold increase in throughput, by only losing 1\% of accuracy. The presented results were achieved on CPU's, as many modern machine learning libraries make use of the parallelizing capabilities of GPU's for matrix multiplications, the next subsection covers the work done by Seulki and Youngmin \cite{gpu} that parellelized the SGNS on GPU's.
 
 \subsection{Accelleration of word2vec by Using GPU's}
 Seulki and Youngmin \cite{gpu} focused on getting a better throughput on the SGM when using GPU's. As the SGM is a sequential algorithm, is is not easy to parallelize it, especially if one wants to parallelize the training of individual training samples. As the algorithm goes sequentially over a sentence, the samples next to each other, in order of execution, will almost every time have the same input word. Consequently, it's very hard to parallelize at this level. 
