@@ -29,9 +29,9 @@ Momentum and  Nesterov Accelerated Gradient (NAG) \cite{nag} both have an additi
 \caption{Training time Nesterov with input Shuffling}
 \label{fig:results_nag}
 \end{figure}
-\subsubsection{Adagrad}
-Adagrad \cite{adagrad} is a very interesting tool for learning word embeddings as it decreases the learning rate for very frequent occurring features, and vice versa). Because words that appear very frequently often do not have a semantic gain that is as important as words that appear less frequently to their context words, it's good to have a lower learning rate for such frequent words. So, in theory, Adagrad is particularly well suited for our task, as for example Pennington et al. used Adagrad in the training of Glove \cite{glove}, another system used to create word embeddings.  This was confirmed empirically as our model converged in 4 epochs. When combined with shuffling Adagrad only took 3 epochs to converge. This shows the tendency of the skip gram model to converge faster with input shuffling and the big impact of having different learning rate for each feature.
-Here it's interesting to notice that a higher learning rate combined with input shuffling did not yield better results than without shuffling. Both of our best results happened with a learning rate of $0.1$, as shown in Figure \ref{fig:results_adagrad_shuffle}.
+\subsubsection{Adagrad}\label{ssec:results_adagrad}
+Adagrad \cite{adagrad} is a very interesting optimizing for creating word embeddings as it decreases the learning rate for very frequent occurring features, and vice versa. Words (features in our case) that appear very frequently (low learning rate) often do not have a semantic gain  that is as important as words that appear less frequently (high learning rate) to their context words. So, in theory, Adagrad is particularly well suited for our task, as for example Pennington et al. used Adagrad in the training of Glove \cite{glove}, another system which word embeddings. Our results confirmed empirically that Adagrad can work better for creating word embeddings. The  model converged in 4 epochs. When combined with shuffling Adagrad only took 3 epochs to converge. These results confirms two hypothesis: first  the tendency of the Skip-Gram Model to converge faster with input shuffling and second  the big impact of having different learning rate for each feature.
+Another interesting fact to notice is that a higher learning rate combined with input shuffling did not yield better results than without shuffling, in comparison to the earlier described optimzers. Adagrad performed best with a learning rate of $0.1$, as shown in Figure \ref{fig:results_adagrad_shuffle}.
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.3]{images/results_adagrad_shuffle}
@@ -39,8 +39,8 @@ Here it's interesting to notice that a higher learning rate combined with input 
 \label{fig:results_adagrad_shuffle}
 \end{figure}
 \subsubsection{Adadelta}
-In theory Adadelta \cite{adadelta} should outperform Adagrad as it's an extension of the former. Because it didn't have any learning rate to tune, we only did 2 experiments, with and without input shuffling. 
-We are aware of the fact that there are additional hyper parameters to Adadelta. We decide not to tune theim for to reasons: first for simplicity reasons and second because their effect is not as high as the learning rate. The parameter that defines the percentage taken when calculating the exponentially decaying average of past gradients was set to $\rho = 0.9$. Adadelta did not manage to achieve a word similarity of 0.66. It only converged to a similarity of 0.59. It did this in 20 epochs without input shuffling and in 3 with input shuffling, as can be seen in Table \ref{table:results_adadelta}
+In theory Adadelta \cite{adadelta} should outperform Adagrad as it's an extension of the former. Adadelta doesn't  have any learning rate to tune, therefore we only did 2 experiments, with and without input shuffling. 
+We are aware of the fact that there are additional hyper parameters to Adadelta. We decide not to tune them for two reasons: first for simplicity reasons and second because their effect is not as high as the learning rate. The hyper parameter, $\rho$ that defines the percentage taken when calculating the exponentially decaying average of past gradients was set to $\rho = 0.9$. Adadelta did not manage to achieve a word similarity of 0.66, in comparison to all the others optimzers. It only converged to a similarity of 0.59. It did this in 20 epochs without input shuffling and in 3 with input shuffling, as can be seen in Table \ref{table:results_adadelta}
 
 
 \begin{table}[tb]
@@ -58,7 +58,7 @@ With Shuffling & 3 & 0.59 \\
 \end{table}
 
 \subsubsection{Adam}
-Adam is the most advanced of all the optimizers used in our experiments and did yield the best results as seen in Figure \ref{fig:results_adam_shuffle}. Adam converged in 3 epochs without shuffling and 2 with. This is the best result that we got with any optimizer.  It's also interesting to note that as same as with Adagrad it did not react to input shuffling the same way as SGD did. In fact, it worked in the opposite direction, as we achieved our best result with input shuffling while having a lower learning rate $0.001$ then we used to achieve the best result without input shuffling $0.05$.
+Adam is the most advanced of all the optimizers used in our experiments and did yield the best results as seen in Figure \ref{fig:results_adam_shuffle}. Adam converged in 3 epochs without shuffling and a learning rate of $0.05$ and 2 with shuffling and a learning rate of $0.001$, as shown in Figure \ref{fig:results_adam_shuffle}. Those are the best results achieved in any of our experiment. Exacctly as Adagrad, Adamd did not react to input shuffling the same way as SGD did.
 \begin{figure}[h]
     \centering
             \includegraphics[scale=0.3]{images/results_adam_shuffle} 
