@@ -1,0 +1,72 @@
+ \begin{frame}
+ \frametitle{Overview} 
+ \begin{Large}
+Overview of my thesis
+ \end{Large}
+ \bigskip
+ \begin{itemize}
+ \item Word embeddings are vector representations of words
+ \item Word embeddings are a powerful tool that facilitate NLP
+ \item Skip Gram Model with negative sampling, is a simple and powerful algorithm (Mikolov et al.) \cite{mikolov}
+ \item This work focused on optimizing the convergence time
+ \item Techniques used: 
+ \begin{itemize}
+ \item Advanced optimizers
+ \item Input shuffling
+ \end{itemize}
+ \end{itemize}
+ \end{frame}
+\iffalse
+\begin{frame}\frametitle{Motivation}
+\textbf{How can we encode vectors for machine learning? }\\
+\bigskip 
+\centerline{
+He =$
+\left(
+\begin{array}{c}
+\rowcolor{green! 20}
+1\\
+0\\
+0\\
+\end{array}\right)
+$
+is = $
+\left(
+\begin{array}{c}
+0\\
+\rowcolor{blue! 20}
+1\\
+0\\
+\end{array}\right)
+$
+King =
+$
+\left(
+\begin{array}{c}
+0\\
+0\\
+\rowcolor{red! 20}
+1\\
+\end{array}\right)
+$}
+\bigskip
+\begin{itemize}
+    \item \texttt{PROBLEMS:}
+    \begin{itemize}
+    \item All vectors have the same distance to each other
+    \item Very high dimension 
+    \end{itemize}
+\end{itemize}
+\end{frame}
+\begin{frame}\frametitle {Motivation}
+    \framesubtitle{Why are word embeddings necessary?}
+    \textbf{We need a new system to create word embeddings }
+      \begin{itemize}
+ \item $\Rightarrow $Skip-Gram Model  (Mikolov et al. 2013) \cite{mikolov}
+ \item Low dimension
+ \item Captures meaning
+ \item Speeds up and improves other NLP tasks, for example machine translation. 
+ \end{itemize}
+  \end{frame}
+  \fi
+
