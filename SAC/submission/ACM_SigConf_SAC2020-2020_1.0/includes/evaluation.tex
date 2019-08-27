@@ -33,7 +33,7 @@ P(w) = 1- \sqrt{{\frac{t}{f(w)}}}
 
 where $f(w)$ is the frequency of w, and $t$ is a threshold set empirically. Mikolov et al. recommend a value between $0$ and $10^{-5}$, depending on the size of the dataset. We experimented with different values and $10^{-4}$ seemed the most suited on the text8 dataset. We did this by looking at a random set of sentences and judging the results manually. 
 As Equation \ref{eq:sampling} is a probability, subsampling is not a deterministic procedure, words that may have been deleted with a threshold of $10^-2$ may stay in the dataset with a lower threshold. An example of the first sentence with different sampling thresholds can be found in Table \ref{table:treshold_examples}. The table shows the first 20 words of our dataset, without the words that were subsampled according to a threshold sample. Stats about subsampling can be found in Table \ref{table:threshold}.
-
+\iffalse
 \begin{table}[tb]
 \caption{Size of the preprocessed text8 dataset according to sampling treshold}
     %\scriptsize
@@ -63,22 +63,15 @@ $10^{-5}$ & against radicals diggers \\ \hline
    \end{tabular}%
 \label{table:treshold_examples}
 \end{table*}
-
+\fi
 
 
 \subsubsection{Min count}
 We also deleted every word that did not appear more than 5 times in our dataset. This idea was also introduced by Mikolove et al. \citep{mikolov2}. This is a good technique because of three reasons: First certain words of our data sets do not appear in a common lexicon (twigleg, melqu), or come from a foreign language (Volksvereinigung), or are names and acronyms. Secondly, each document often has spelling mistakes, those (as long as the same spelling mistake does not appear too often, what should be avoided in practice) would be deleted by sampling too, as the words do not have any meaning. Lastly, a word that only appears one time in our dataset will be very dependent on its original initialization. The weights of the network that represents the word, will only be updated when the word itself is used as input. As the word appears very infrequently the word representation will not differ much from the initialization, hence being very dependent from it. For all the above reasons, we applied this technique. Similar to subsampling, it will decrease computation time and  should in theory improve the quality of the word embeddings.
 
 \subsection{Evaluating word embedings}
-Evaluating word embedding is not an easy task, such as evaluating the accuracy of a common classifier for example. We cannot split our data set into train and test set. As the task that the network is learning is of no interest to us. Therefore, to ensure the quality of word embeddings other techniques have to be used.To define quality we first need to define a measure of similarity between two vectors. This requires knowledge of the Cosine distance, which is introduced in the following subsection.
-\subsubsection{Cosine distance}
-The cosine similarity, this is not the cosine distance, of vectors $v$ and $w$ is the cosine of the angle between the two vectors. It can be calculated by taking the dot product of $v$ and $w$ and dividing it by the magnitude of $v$ and $w$ multiplied with each other. We get:
-\begin{equation}
-cos\_sim(v,w) = \frac{v \cdot w}{|v| |w|}
-\end{equation}
-The cosine of 0\textdegree ~is 1, it's 0 for two vectors that are orthogonal to each other and vectors that point in the opposite direction will have a cosine of their angle of -1. This is not a good distance measure as -1 is smaller than 0, and therefore two vectors pointing away from each other would be closer than two orthogonal vectors. But by subtracting 1 from the cosine of the angle we can create a good distance measure between the two vectors. This distance does not take into account any order of magnitude. Hence, for our tasks, two vectors will be considered equal if they are of different magnitude but point in the same direction.
-Apart from measuring the quality of word embedding well, this technique has another advantage. By normalizing the vectors the calculation of the cosine angle becomes the dot product of the two vectors. Which can be computed very fast on modern GPU's, when using matrix multiplication.
-Knowing that we have a measure to compute the similarity of two vectors let us introduce a way to rate the quality of our embeddings.
+Evaluating word embedding is not an easy task, such as evaluating the accuracy of a common classifier for example. We cannot split our data set into train and test set. As the task that the network is learning is of no interest to us. Therefore, to ensure the quality of word embeddings other techniques have to be used.To define quality we first need to define a measure of similarity between two vectors. For this task we will use the cosine distance. Two vectors will be judged similiar if they point in the same direction. 
+
 
 \subsubsection{Word similarity and wordsim353}
 Too measure the quality of our word embedding, in question of word similarity we must use a dataset to compare our self too.
@@ -134,10 +127,5 @@ Let $X = {x_1...x_n}$ be our input data set. Input Shuffling describes the proce
 \\
 There are two reasons why we think that input shuffling is particularly well suited for the SGNS. Firstly, we read our words sequentially, therefore,  words that only appear very early in the dataset will not benefit from the context words being already updated from others. The second idea is that we used the special batch technique described in Section \ref{sec:contribution}. When we do not use input shuffling the same word will appear with all of its context words as training samples in a batch, therefore the updae will be an average of all of these training samples. But if we would use input shuffling instead, then the probability of a word appearing multiple time in one batch would be smaller. In consequence the accuracy of the model should be optimized hence, leading to a better convergence time. A definition of convergence time is given in the next section. 
 
-\subsection{Convergence time}
-To optimize convergence time we have to define it first. Therefore, we used the already available implementation of Gensim \citep{gensim}. Ji. et al. defined a score of $0.66$ in the task of word similarity, with the text8 dataset, as the state of the art. We therefore could then use Gensim to find out the convergence time of the model, namely 4 epochs. Therefore, we defined the following criteria for convergence: \\
-\centerline{$\rho - \rho_{prev} < 0.009 \vee \rho = 0.66$} \\
-where $\rho$ is the Pearson coefficient on the wordsim353 task.
-We also stopped computation, if it took more then 20 epochs to converge.
 
 To summarize the evaluation, we deleted words that appear very often (subsampling) and very infrequently (min count) from our dataset, i.e text8 dataset. To evaluate the resulting word embeddings we defined the cosine distance, which is 1 minuse the cosine of the angle of two vectors. We will measure the quality of the embeddings by analyzing the correlation of the cosine distance of pairs of vectors to humanly judged similarity score of the corresponding words, and used the wordsim353 to collect these scores. The reader was also given an explanation about the configuration of our network and introduced to the concept of input shuffling. With all this knowledge we can know present the achieved experimental results in the next section.

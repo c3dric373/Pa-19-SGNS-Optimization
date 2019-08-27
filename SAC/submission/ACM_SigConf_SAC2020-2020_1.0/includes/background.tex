@@ -78,12 +78,14 @@ One question remains: how are the negative samples selected? Mikolov et al. \cit
 \begin{equation} \label{eq:unigram}
 P(w)=\frac{f(w)^{\frac{3}{4}}}{\sum_{t=0}^{T} f(w_t)^{\frac{3}{4}}}
 \end{equation}
-where $f(w)$ is the frequency of $w_t$. The value of $\frac{3}{4}$ is set empirically. Raising the unigram distribution to the power of $\frac{3}{4}$ makes it less likely for a word to be drawn if it often appears in the dataset in comparison to the basic unigram distribution. See figure \ref{fig:frequency_ex} for an example.\\
+where $f(w)$ is the frequency of $w_t$. The value of $\frac{3}{4}$ is set empirically. Raising the unigram distribution to the power of $\frac{3}{4}$ makes it less likely for a word to be drawn if it often appears in the dataset in comparison to the basic unigram distribution.
+\iffalse See figure \ref{fig:frequency_ex} for an example.\\
 \begin{figure}[ht]
 \centering
 \includegraphics[scale=0.30]{images/frequency_ex}
 \caption{Probabililty of a word, of the text8 dataset (sampled), to be chosen at random according to its frequency and the power to which the unigram distribution is raised}
 \label{fig:frequency_ex}
 \end{figure}
+\fi
 With all of the above knowledge it's understandable that the SGNS will  will outperform the classical softmax in computation time. Now the question arises if the accuracy is maintained but according to Mikolov et al. \citep{mikolov2} the negative sampling method "is an extremely simple training method that learns accurate representations". As a matter of fact, Mikolov et al. \citep{mikolov2} reported a 6\% accuracy improvement in comparison to a Hierarchical Softmax model. Therefore, it is a good solution to the problem raised by the classical softmax.
 We now have enough background knowledge about the SGM to look at how it can be optimized. The next section introduces earlier approaches to optimize the SGM.
