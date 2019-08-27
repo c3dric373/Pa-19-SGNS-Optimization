@@ -60,3 +60,13 @@ Summing the matrix $S$ and multiplying it with $-1$ (to make the problem a minim
 L = $- \sum_{(i,j) \in k \times n} S(i,j) $\\
 
 This finishes the description of our batched approach. The next section will describe our experimental setting and the possibilities that exists to evaluate the quality of word embeddings. 
+
+\subsection{Distribution of word frequencies}
+To tune the batch size and create batches of better quality we chose to analyze the distribution of word frequencies. A box plot of the distribution, on the text8 dataset, can be found in Figure \ref{fig:boxplot_freq}. 
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{images/boxplot_freq}
+\caption{Distribution of word frequencies in the text8 datasedt}
+\label{fig:boxplot_freq}
+\end{figure} 
+This shows that very few words are responsible for the majority of the context pairs. For example the word \textit{the} creates 50\% of the pairs in the text8 dataset. Therefore if we create batches, the word the will appear multiple time and the learning will be hindered. 
