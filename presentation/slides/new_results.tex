@@ -1,17 +1,9 @@
-\begin{frame}
-\frametitle{Solution to the batched Approach}
-\begin{Large}
-How can we improve the batched approach? 
-\end{Large}
-\begin{itemize}
-\item A batch without double appearing words? 
-\item Analyze the distribution of words in the dataset?
-\item Creating the perfect batch? 
-\item Delete frequent occuring words from the dataset? 
-\end{itemize}
-  \end{frame}
+
   \begin{frame}
-\frametitle{Distribution of Words}
+\frametitle{Delete double occurrences}
+\begin{Large}
+How can we improve the batched approach? \\
+\end{Large}
 \begin{Large}
 Problem:\\
 \end{Large}
@@ -20,15 +12,36 @@ Words appear more than once in a batch $\rightarrow$ performance loss\\
 Solution:\\
 \end{Large}
 Create batch of different sizes, each batch will hold at most one pair per context word\\
+  \end{frame}
+
+  
+    \begin{frame}
+\frametitle{Delete double occurrences}
+\begin{Large}
+Sentence = The fox jumps over the dog\\
+Example Dictionnary:\\
+\end{Large}
+\includegraphics[scale=0.5]{images/dict_ex}\\
+\begin{Large}
+Example Batches
+\end{Large}
+\includegraphics[scale=0.4]{images/batch_ex}
+  \end{frame}
+  
+   \begin{frame}
+\frametitle{Delete double occurrences}
 \begin{large}
 Problem of the Solution:\\
 \end{large}
 Average Batch Size = 200, i.e training takes too long
-  \end{frame}
+\includegraphics[scale=0.34]{images/batch_sizes}
+  \end{frame}  
+  
+  
 \begin{frame}
 \frametitle{Distribution of Words}
 \centering
-\includegraphics[scale=0.2]{images/no_sampling_boxplot}
+\includegraphics[scale=0.4]{images/no_sampling_boxplot}
   \end{frame}
 \begin{frame}
 \frametitle{Distribution of Words}
@@ -38,22 +51,30 @@ Results of the Distribution
 \begin{itemize}
 \item A few words are responsible for the majority of pairs. 
 \item They almost have the same context words
-\item Have they the same representation? 
+\item Idea: delete outliers from dataset
 \end{itemize}
   \end{frame}
-  \begin{frame}
-\frametitle{Distribution of Words}
-\begin{Large}
-Yes they have!
-\end{Large}
-blablalbab
-  \end{frame}
+
     \begin{frame}
 \frametitle{Deletion of outliers}
 \begin{Large}
 First Results 
 \end{Large}
+    \begin{table}[]
+\begin{tabular}{|l|l|l|}
+\hline
+Model    & Convergence Time & Word Similarity \\ \hline
+SGD & {11}              & 0.65            \\ \hline
+SGD w/shuffling & {7}              & 0.66            \\ \hline
+Adam & {3}              & 0.66            \\ \hline
+Adam w/ shuffling & {2}              & 0.66      \\ \hline
+Gensim   & 4          & 0.66            \\ \hline
+Adam w/o outliers  & \textbf{1} & 0.66 \\ \hline
+\end{tabular}
+\end{table}
   \end{frame}
+  
+  
       \begin{frame}
 \frametitle{Deletion of outliers}
 \begin{Large}
@@ -62,5 +83,6 @@ Future Work
 \begin{itemize}
 \item Creating the perfect batch 
 \item Analyze the deletion of outliers on other (bigger) datasets.
+\item Confirm all results on other task
 \end{itemize}
   \end{frame}

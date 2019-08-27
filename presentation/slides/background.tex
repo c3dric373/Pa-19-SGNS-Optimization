@@ -146,71 +146,11 @@ while at the same time maintaining it's accuracy?
 \begin{Large}
 Our Implementation \\
 \end{Large}
+Implemented the original Skip-Gram Model, except for one change:\\
 Main Idea: 
 \begin{itemize}
 \item Create a large batch of training samples, i.e 2000 pairs
 \item Compute loss for each pair
 \item Use sum over all pairs as loss for batch 
 \end{itemize}
-\end{frame}
-\begin{frame}
-\frametitle{Background}
-\begin{Large}
-Our Implementation \\
-\end{Large}
-Illustration of the batched Skip-Gram Model
-\\ $X = {(v_1,c_1),(v_2,c_2),(v_3,c_3)}$
-Input:\\
- $v = \begin{bmatrix}
-v_1 & v_2 & v_3
-\end{bmatrix}, c = \begin{bmatrix}
-c1\\
-c2\\
-c3\end{bmatrix}$ and $A = 
-\begin{bmatrix}
-k_{1,1} & k_{2,1} & k_{3,1}\\
-k_{1,2} & k_{2,2} & k_{3,2}\\
-k_{1,3} & k_{2,3} & k_{3,3}\\
-\end{bmatrix}$\\
-
- We then concatenate $c$ and $A$, 
-resulting in: \\
-$\tilde{A} = \begin{bmatrix}
-c_1 & k_{1,1} & k_{2,1} & k_{3,1}\\
-c_2 & k_{1,2} & k_{2,2} & k_{3,2}\\
-c_3 & k_{1,3} & k_{2,3}& k_{3,3}\\
-\end{bmatrix}$
-
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Background}
-\begin{Large}
-Our Implementation \\
-\end{Large}
-Embeddings:\\
-$E_v = \begin{bmatrix}
-\tilde{v_1}_1 & \ldots & \tilde{v_1}_d\\
-\tilde{v_2}_1 & \ldots & \tilde{v_2}_d\\
-\tilde{v_3}_1 & \ldots & \tilde{v_3}_d\\
-\end{bmatrix}
-$, where $\tilde{v_i} = \begin{bmatrix}
-\tilde{v_i}_1 & \ldots & \tilde{v_i}_d \end{bmatrix}$ is the embedding of $v_i$.  \\$E_c = \begin{bmatrix}
-\tilde{c_1 }& \tilde{k_{1,1}} & \tilde{k_{2,1}} \\
-\tilde{c_2 }& \tilde{k_{1,2}}& \tilde{k_{2,2}} \\
-\tilde{c_3 }&\tilde{ k_{1,3} }& \tilde{k_{2,3}}\\
-\end{bmatrix}$,
-where each entry of the matrix is a vector of dimension $d$\\
-
-Batch multiplication and negation of samples:\\
-$S = \begin{bmatrix}
-\tilde{v_1} \cdot  \tilde{c_1} & -\tilde{v_1} \cdot \tilde{k_{1,1}} & -\tilde{v_1} \cdot  \tilde{k_{2,1}}& -\tilde{v_1} \cdot  \tilde{k_{3,1}}\\
-\tilde{v_2} \cdot \tilde{c_2} & -\tilde{v_2} \cdot \tilde{k_{1,2}} & -\tilde{v_2} \cdot \tilde{k_{2,2}} & -\tilde{v_2} \cdot \tilde{k_{3,2}}\\
-\tilde{v_3} \cdot \tilde{c_3} &-\tilde{v_3} \cdot c_3  \tilde{k_{1,3}} & -\tilde{v_3} \cdot c_3 \tilde{k_{2,3}}&-\tilde{v_3} \cdot \tilde{k_{3,3}}\\
-\end{bmatrix}$\\
-
-Loss computation: \\
- L = $- \sum_{(i,j) \in k \times n} S(i,j) $
-
 \end{frame}

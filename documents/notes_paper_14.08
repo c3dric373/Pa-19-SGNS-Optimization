@@ -1,0 +1,12 @@
+batched skip gram -> talk about hogwild parallelization and differences to our model 
+dicsussion -> gensim sgd vs batched update frequency 
+              implement w/ decay and check for neg samples 
+              graphic 0.66 line 
+              correct gensim value
+
+enwik9 dataset 
+doc2vec dbow 
+graph embeddings 
+
+
+stephi pauli fragen 
