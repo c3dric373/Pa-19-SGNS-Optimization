@@ -1,0 +1,48 @@
+\begin{frame}\frametitle{Implementation}
+\begin{Large}
+Implementation
+\end{Large}
+\begin{enumerate}
+\item Setting
+\begin{itemize}
+%\item Hardware Specs
+\item Dataset 
+\item Network Architecture 
+\end{itemize}
+\item Optimization Process
+\end{enumerate}
+\end{frame}
+%%%%%%%% Specs not in pres
+\iffalse
+\begin{frame}
+\frametitle{Hardware Specs} 
+\begin{itemize}
+\item Intel(R) Xeon(R) CPU E5- 2650 v3 @ 2.30GHz
+\item CPU(s):                40
+\end{itemize}
+\end{frame}
+\fi
+\begin{frame}
+\frametitle{Dataset} 
+    \begin{itemize}
+\item Text8 dataset
+\item First 30MB of clean text from wikipedia 
+\item Vocabulary $\approx$ 250k word (small) 
+\item Subsampling $\implies$ 50\% decrease of data set size
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Optimization process}
+Optimization techniques:
+\begin{itemize}
+\item Advanced Optimizers
+\begin{itemize}
+\item Momentum
+\item Nesterov accellerated Momentum 
+\item Adagrad 
+\item Adam
+\end{itemize}
+\item Input Shuffling
+\end{itemize}
+\end{frame}
