@@ -11,8 +11,10 @@ In this subsubsection we will use the term SGD for SGD, Momentum and NAG, and ad
 First, we suspect our batched version of the Skip-Gram model with negative sampling (SGNS), to be at the origin of this phenomena. In consequence to this batched version, when input shuffling is not used a lot of words will appear multiple times in the same batch, as explained in Section \ref{ssec:shuffling}. Therefore, the gradients will be an average of all the training samples. When the input is shuffled, less words will appear multiple time which will make the gradients more precise.\\
 Second, advanced optimizers have a way to counter-attack this issue, namely adaptive learning rates, explained in Section \ref{ssec:results_adagrad}. Adaptive learning rates counter attack the issue in the following way: high frequency words  will appear more often multiple times in a batch, they will also have lower learning rates. Therefore the impact of appearing in the same batch will be reduced. \\  The two above arguments could explain why a higher learning rate combined with SGD achieved better results with input shuffling but not when advanced optimizers are used. 
 
+\iffalse
 \subsubsection{Large differences with NAG and SGD when using shuffling}
 SGD and NAG both have very different values when using shuffling in comparison to unshuffled input, as shown in figures \ref{fig:results_sgd} and \ref{fig:results_nag}. We do not only attribute those results to input shuffling but partially also to a good random initialization guess. Due to a lack of time these experiments were not replicate more than once.
+\fi 
 
 \subsection{Comparison to Gensim}
 This subsection will compare our finding extensively to Gensim \citep{gensim}. As explained in Section \ref{ssec:gensim}, Gensim is optimized to have a very high throughput, this made it possible to achieve a lot of computations. Furthermore, Gensim provides access to the loss and the resulting word embeddings, which facilitated the comparison process.

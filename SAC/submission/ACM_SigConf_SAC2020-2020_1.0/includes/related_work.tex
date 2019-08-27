@@ -4,13 +4,16 @@ In the original model, the optimization is done with Stochastic Gradient Descent
 
 \subsection{Parellelization by the use of caching}
 This idea was proposed by Vuurens et al. \citep{efficient}. The architecture used here is the SGM with a hierarchical softmax. 
-The general idea is to cache the most frequently used weight vectors, and update the model after a certain number of seen training samples, while taking in consideration the changes that happend during these number of seen training samples (the paper used the number 10). The unfrequent weight vectors are handled as in the original paper, i.e updated in shared memory after each training sample. This technique  allows it to avoid collosision for the most frequent words, and the author therefore hoped to be able to increase the number of concurrent threads. The paper produced interesting results as they managed to decrease execution time by increasing the number of cores used for the calculation. This is very powerful because in the original implementation the execution time regressed after using more than 8 cores. It seems to indicate that too much overwriting was happening, as the number of concurrent threads surpasses a certain threshold. This can be seen in Figure \ref{fig:efficient}, where c31 is the model proposed by Vuurens et al.\citep{efficient}. The model did not suffer any accuracy loss in comparison to the original SGM model.
+The general idea is to cache the most frequently used weight vectors, and update the model after a certain number of seen training samples, while taking in consideration the changes that happend during these number of seen training samples (the paper used the number 10). The unfrequent weight vectors are handled as in the original paper, i.e updated in shared memory after each training sample. This technique  allows it to avoid collosision for the most frequent words, and the author therefore hoped to be able to increase the number of concurrent threads. The paper produced interesting results as they managed to decrease execution time by increasing the number of cores used for the calculation. This is very powerful because in the original implementation the execution time regressed after using more than 8 cores. It seems to indicate that too much overwriting was happening, as the number of concurrent threads surpasses a certain threshold. The model did not suffer any accuracy loss in comparison to the original SGM model.
+\iffalse
 \begin{figure}[ht]
 \centering
 \includegraphics[scale=0.3]{images/cachingEfficiency.png}
 \caption{Comparasion of the execution time in relation to the number of used cores \citep{efficient}}
 \label{fig:efficient}
 \end{figure}
+\fi
+
 This work proposes a very good way to parallelize the SGM, as in particular, it allows using more cores during the computation. As this approached focused on the Hierarchical softmax, in contrast to our work which uses negative sampling, the next subsection covers optimizations of the Skip-Gram Model with negative sampling(SGNS).
 
 \subsection{Parallization in shared and Distributed Memory}

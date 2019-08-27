@@ -5,8 +5,8 @@
 This section gives an overview of the used datasets, the used metric to evaluate our models, the configuration of our model, and finally an explanation about input shuffling
 
 \subsection{Dataset}\label{sec:dataset}
-In this implementation we only used the text8 \footnote{http://mattmahoney.net/dc/enwik8.zip} dataset. We chose this dataset for two reasons. First of all, it's a small dataset, that allowed us to do a lot of computations. Secondly, this dataset was used in related work \citep{intel} hence giving us a very good benchmark. The text8 dataset consists of 1702 lines of 1000 words, with a vocabulary of roughly 63000 words. Conveniently, there is no punctuation in the dataset. Therefore, we had to choose between building arbitrary sentences and keeping the dataset as it is. We chose the first option because it gives us a faster computation time, and did not show any significant loss in quality empirically, as shown in Table \ref{table:with_20}. We chose a length of sentences of 20. Furthermore, we applied a technique called subsampling to reduce the data set size, which is explained in the following subsection.
-
+In this implementation we only used the text8 \footnote{http://mattmahoney.net/dc/enwik8.zip} dataset. We chose this dataset for two reasons. First of all, it's a small dataset, that allowed us to do a lot of computations. Secondly, this dataset was used in related work \citep{intel} hence giving us a very good benchmark. The text8 dataset consists of 1702 lines of 1000 words, with a vocabulary of roughly 63000 words. Conveniently, there is no punctuation in the dataset. Therefore, we had to choose between building arbitrary sentences and keeping the dataset as it is. We chose the first option because it gives us a faster computation time, and did not show any significant loss in quality empirically. We chose a length of sentences of 20. Furthermore, we applied a technique called subsampling to reduce the data set size, which is explained in the following subsection.
+\iffalse
 \begin{table}[tb]
     \caption{Training and Convergence time according to choice of the length of sentences in text8 datasetCaption}
     %\scriptsize
@@ -22,18 +22,20 @@ Word Similarity& 0.65 & 0.66 & 0.66 & 0.66 \\ \hline
    \end{tabular}%
    \label{table:with_20}%
 \end{table}
-
+\fi 
 
 \subsubsection{Subsampling}
-Subsampling is a technique introduced by Mikolov et al. \citep{mikolov} to reduce the size of the dataset while at the same time increasing the quality of the dataset, i.e increasing the quality of the word embeddings (WE). The idea behind subsampling is the removal of very frequent words such as: "the, as, it, of". These words do not give an intrinsic value to the words that appear in its context. Therefore, the goal of subsampling is to delete such words from the dataset. Subsampling will decrease the computation time, as it will reduce the number of training samples, and should, in theory, increase the accuracy of the model. The increase in accuracy can also be explained by the fact that words that would not have appeared in the context of each other, may now do because words between have been deleted.
+Subsampling is a technique introduced by Mikolov et al. \citep{mikolov} to reduce the size of the dataset while at the same increasing the quality of the word embeddings (WE). The idea behind subsampling is the removal of very frequent words such as: "the, as, it, of". These words do not give an intrinsic value to the words that appear in its context. Therefore, the goal of subsampling is to delete such words from the dataset. Subsampling will decrease the computation time, as it will reduce the number of training samples, and should, in theory, increase the accuracy of the model. The increase in accuracy can also be explained by the fact that words that would not have appeared in the context of each other, may now do because words between have been deleted. 
+Details about the probability of the deletion of a word can be found in the orignial paper from Mikolov \citep{mikolov2}.
+\iffalse
 To choose which word to delete, Mikolov et al. \citep{mikolov2} chose the following equation to compute the probability of a word $w$  to be deleted from the data set:
 \begin{equation} \label{eq:sampling}
 P(w) = 1- \sqrt{{\frac{t}{f(w)}}}
 \end{equation}
 
 where $f(w)$ is the frequency of w, and $t$ is a threshold set empirically. Mikolov et al. recommend a value between $0$ and $10^{-5}$, depending on the size of the dataset. We experimented with different values and $10^{-4}$ seemed the most suited on the text8 dataset. We did this by looking at a random set of sentences and judging the results manually. 
-As Equation \ref{eq:sampling} is a probability, subsampling is not a deterministic procedure, words that may have been deleted with a threshold of $10^-2$ may stay in the dataset with a lower threshold. An example of the first sentence with different sampling thresholds can be found in Table \ref{table:treshold_examples}. The table shows the first 20 words of our dataset, without the words that were subsampled according to a threshold sample. Stats about subsampling can be found in Table \ref{table:threshold}.
-\iffalse
+As Equation \ref{eq:sampling} is a probability, subsampling is not a deterministic procedure, words that may have been deleted with a threshold of $10^-2$ may stay in the dataset with a lower threshold. 
+An example of the first sentence with different sampling thresholds can be found in Table \ref{table:treshold_examples}. The table shows the first 20 words of our dataset, without the words that were subsampled according to a threshold sample. Stats about subsampling can be found in Table \ref{table:threshold}.
 \begin{table}[tb]
 \caption{Size of the preprocessed text8 dataset according to sampling treshold}
     %\scriptsize
@@ -67,7 +69,7 @@ $10^{-5}$ & against radicals diggers \\ \hline
 
 
 \subsubsection{Min count}
-We also deleted every word that did not appear more than 5 times in our dataset. This idea was also introduced by Mikolove et al. \citep{mikolov2}. This is a good technique because of three reasons: First certain words of our data sets do not appear in a common lexicon (twigleg, melqu), or come from a foreign language (Volksvereinigung), or are names and acronyms. Secondly, each document often has spelling mistakes, those (as long as the same spelling mistake does not appear too often, what should be avoided in practice) would be deleted by sampling too, as the words do not have any meaning. Lastly, a word that only appears one time in our dataset will be very dependent on its original initialization. The weights of the network that represents the word, will only be updated when the word itself is used as input. As the word appears very infrequently the word representation will not differ much from the initialization, hence being very dependent from it. For all the above reasons, we applied this technique. Similar to subsampling, it will decrease computation time and  should in theory improve the quality of the word embeddings.
+We also deleted every word that did not appear more than 5 times in our dataset. This idea was also introduced by Mikolove et al. \citep{mikolov2}. This is a good technique because of three reasons: First certain words of our data sets do not appear in a common lexicon (twigleg, melqu), or come from a foreign language (Volksvereinigung), or are names and acronyms. Secondly, each document often has spelling mistakes, those would be deleted by sampling too, as the words do not have any meaning. Lastly, a word that only appears one time in our dataset will be very dependent on its original initialization. For all the above reasons, we applied this technique. Similar to subsampling, it will decrease computation time and  should in theory improve the quality of the word embeddings.
 
 \subsection{Evaluating word embedings}
 Evaluating word embedding is not an easy task, such as evaluating the accuracy of a common classifier for example. We cannot split our data set into train and test set. As the task that the network is learning is of no interest to us. Therefore, to ensure the quality of word embeddings other techniques have to be used.To define quality we first need to define a measure of similarity between two vectors. For this task we will use the cosine distance. Two vectors will be judged similiar if they point in the same direction. 
@@ -76,7 +78,7 @@ Evaluating word embedding is not an easy task, such as evaluating the accuracy o
 \subsubsection{Word similarity and wordsim353}
 Too measure the quality of our word embedding, in question of word similarity we must use a dataset to compare our self too.
  We chose wordsim353\footnote{http://www.cs.technion.ac.il/~gabr/resources/data/wordsim353/wordsim353.zip} for this task, as it's the most used in the related literature. The data set consists of 353 pairs of words rated by humans on their similarity. The similarity score is in the range of 1 and 10, with 10 being the best score. An example for two of such pairs can be found in Table \ref{fig:ws353_ex}. We will rank our embeddings on the Pearson correlation coefficient between the cosine distance and the scores attributed by humans, as this is the common procedure. This concludes our description of the evaluation methods of word embeddings. The next section will present the configuration of our network used to optimize the SGNS.
-
+\iffalse
 \begin{table}[tb]\centering
 \caption{Example of pairs and their rating in wordsim353}
 \begin{tabular}{l l l }
@@ -90,20 +92,19 @@ Word1 & Word2 & Score \\ \hline
 \end{tabular}
 \label{fig:ws353_ex}
 \end{table}
+\fi
 
 
 \subsection{Configuration of the network}\label{ssec:config}
-The SGNS has a lot of possible parameters, that can be tuned. We experimented with different models and finally decided for one that we tried to optimize. This subsection will give a short overview of each parameter, where we will explain the process in which we chose the value of the given parameter. The explanation of the parameters will be structured as follows:
-\texttt{Parameter} - Description and Tuning - \textit{Value}
+The SGNS has a lot of possible parameters, that can be tuned. We experimented with different models and finally decided for one that we tried to optimize. The network was configured the following way: 
 \begin{itemize}
-\item \texttt{Negative Samples:} For this parameter we have to find a trade-off between, a parameter that is too high (better accuracy slower computation time) and too low ( worse accuracy faster computation time). For smaller data sets a higher number of negative samples is often needed. In their original paper Mikolov et al. \citep{mikolov2} recommend a value of 5-20. We tested a few values in the range of 5 to 15, as 10 yielded state of the art results we chose this value. - \textit{10}
-\item \texttt{Context Window:} The bigger the window size the more training examples the network will have, but if the window size is too big the semantic meaning of the window size will be erased. Mikolov et al. \citep{mikolov} proposed a value between 2-10  - \textit{5}
-\item\texttt{ Dimension of the embedding}: The choice of the dimension is less obvious, as the dimension needs to be high enough to capture the meaning, but cannot be too high as this leads to a decrease in performance as shown by Yin and Shen \citep{dimension_size}. We, therefore, used Gensim to find the best embedding possible. - \textit{100}
-\item \texttt{Batch size}: As described in Section \ref{sec:contribution}, there is a trade off to find between quality and training time. We first used a batch size of 5000, but then decide after non conclusive results that 2000 would be better - \textit{2000}
-\item \texttt{Alpha}: learning rate, this hyperparameter was tuned in every optimizer therefore only the range will be indicated - \textit{(1e-5,1)}
+\item \texttt{Negative Samples:} - \textit{10}
+\item \texttt{Context Window:}  - \textit{5}
+\item\texttt{Dimension of the embedding}: - \textit{100}
+\item \texttt{Batch size}: - \textit{2000}
+\item \texttt{Alpha}:  - \textit{(1e-5,1)}
 \end{itemize}
-
-This conlcudes our overview of the possible parameters of our SGNS, in the next section the reader will be given a description about the process of input shuffling.
+This concludes our overview of the possible parameters of our SGNS, in the next section the reader will be given a description about the process of input shuffling.
 
 \iffalse
 \begin{table}[h]
