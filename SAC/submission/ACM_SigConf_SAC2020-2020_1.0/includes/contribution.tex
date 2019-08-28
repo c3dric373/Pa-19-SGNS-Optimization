@@ -1,4 +1,4 @@
-\section{Batched SkipGramModel} \label{sec:contribution}
+\section{Batched Skip-Gram Model} \label{sec:contribution}
 This section will give an overview of our implementation. The proposed implementation is a slighlty altered version of the origina Skip-Gram Model with negative sampling (SGNS). The idea behind this altering, is to compute the loss for multiple words and context pairs at the same time, this is inspired from mini-batch training, a model often used in other machine learning problem. Instead of computing the loss function of each pair, we computed the sum over a certain number of pairs (i.e 2000) as a loss. The exact process will be described in the following paragraph.
 \subsection{Forwarding}
 As the computation of the new loss function represents the challenging part of our implementation the forwarding method is explained step by step. Each time step is illustrated to make the explanation clearer.\\
@@ -62,11 +62,16 @@ L = $- \sum_{(i,j) \in k \times n} S(i,j) $\\
 This finishes the description of our batched approach. The next section will describe our experimental setting and the possibilities that exists to evaluate the quality of word embeddings. 
 
 \subsection{Distribution of word frequencies}
+\subsubsection{Boxplot}
 To tune the batch size and create batches of better quality we chose to analyze the distribution of word frequencies. A box plot of the distribution, on the text8 dataset, can be found in Figure \ref{fig:boxplot_freq}. 
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.3]{images/boxplot_freq}
+\includegraphics[scale=0.3]{images/no_sampling_boxplot}
 \caption{Distribution of word frequencies in the text8 datasedt}
 \label{fig:boxplot_freq}
 \end{figure} 
-This shows that very few words are responsible for the majority of the context pairs. For example the word \textit{the} creates 50\% of the pairs in the text8 dataset. Therefore if we create batches, the word the will appear multiple time and the learning will be hindered. 
+This shows that very few words are responsible for the majority of the context pairs. For example the word \textit{the} creates 50\% of the pairs in the text8 dataset. Therefore if we create arbitrary batches, most words  will appear multiple times in a batch and the learning will be hindered. Therefore we propose a solution where each word will only appear once in a batch. 
+\subsubsection{Batches}
+To solve this problem we allowed each batch to have a different size. Each batch will contain the most possible pairs where each center word does not appear twice. The problem with this approach is that the batch size decreases very rapidly. This is due to the distribution of words. In consequence the average batch size is small and training time is increased, to remedy this problem we tried to reduce the number of batches, while maintaining the quality of learning. 
+\subsubsection{Deletion of outliers}
+The idea is to delete every word which is an outlier, according to the whiskers plot. This means every word which frequency is bigger than the frequency of the word that marks the boundary of the 3/4 percentile +1.5 IQR. This technique drastically reduces the dataset size,  and is for some datasets, too drastic. We therefore experimented with different frequencies, that could be a good treshhold. 
