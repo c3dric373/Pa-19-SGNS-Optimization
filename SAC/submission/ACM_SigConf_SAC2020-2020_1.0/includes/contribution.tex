@@ -59,19 +59,21 @@ $S = \begin{bmatrix}
 Summing the matrix $S$ and multiplying it with $-1$ (to make the problem a minimizing problem) results in the loss for our entire batch. As some words may appear more than once in the batch this will more be an average of it than as with Mikolov et al. \citep{mikolov2} the exact update per pair. \\
 L = $- \sum_{(i,j) \in k \times n} S(i,j) $\\
 
-This finishes the description of our batched approach. The next section will describe our experimental setting and the possibilities that exists to evaluate the quality of word embeddings. 
+This finishes the description of our batched approach. 
 
 \subsection{Distribution of word frequencies}
 \subsubsection{Boxplot}
-To tune the batch size and create batches of better quality we chose to analyze the distribution of word frequencies. A box plot of the distribution, on the text8 dataset, can be found in Figure \ref{fig:boxplot_freq}. 
+The quality of a batch is dependent on  the number of multiple appearances of words in the batch. The more frequently a word appears in a batch, the training quality of the word decreases. For this matter we chose to analyze the distribution of word frequencies. A box plot of the distribution, on the text8 dataset, can be found in Figure \ref{fig:boxplot_freq}. 
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.3]{images/no_sampling_boxplot}
 \caption{Distribution of word frequencies in the text8 datasedt}
 \label{fig:boxplot_freq}
 \end{figure} 
-This shows that very few words are responsible for the majority of the context pairs. For example the word \textit{the} creates 50\% of the pairs in the text8 dataset. Therefore if we create arbitrary batches, most words  will appear multiple times in a batch and the learning will be hindered. Therefore we propose a solution where each word will only appear once in a batch. 
-\subsubsection{Batches}
-To solve this problem we allowed each batch to have a different size. Each batch will contain the most possible pairs where each center word does not appear twice. The problem with this approach is that the batch size decreases very rapidly. This is due to the distribution of words. In consequence the average batch size is small and training time is increased, to remedy this problem we tried to reduce the number of batches, while maintaining the quality of learning. 
+This shows that very few words appear very frequently, and are therefore responsible for the building of the most context pairs. For example the word \textit{the} creates 50\% of the pairs in the text8 dataset. In consequence if we create arbitrary batches, most words  will appear multiple times in a batch and the learning will be hindered. A solution would be to only allow words to appear once in a batch, in the next section we present such a solution with a variable batch size. \subsubsection{Batches}
+To solve this problem we only chose to block multiple appearance in a batch on the center words. The context words can be the same for two different center words.  Each batch will contain the highest possible number of pairs where each center word does not appear twice. The problem with this approach is that the batch size decreases very rapidly. This is due to the distribution of words. In consequence the average batch size is small and training time is increased, to remedy this problem we tried to reduce the number of very small batches, while maintaining the quality of learning. 
 \subsubsection{Deletion of outliers}
-The idea is to delete every word which is an outlier, according to the whiskers plot. This means every word which frequency is bigger than the frequency of the word that marks the boundary of the 3/4 percentile +1.5 IQR. This technique drastically reduces the dataset size,  and is for some datasets, too drastic. We therefore experimented with different frequencies, that could be a good treshhold. 
+To solve this matter, we looked again at the distribution of word frequencies (Figure \ref{fig:boxplot_freq}). We experimented with different settings (mean, median, average, outlier) and found that deleting all words that had a frequency greater than the 99\% was best. 
+This technique drastically reduces the dataset size. 
+
+The next section will describe our experimental setting and the possibilities that exists to evaluate the quality of word embeddings. 
