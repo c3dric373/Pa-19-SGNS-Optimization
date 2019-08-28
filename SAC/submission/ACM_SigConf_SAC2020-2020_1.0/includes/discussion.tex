@@ -38,8 +38,11 @@ The Adam optimizer did outperform the Gensim application in quality of word embe
 \label{fig:gensim_vs_adam}
 \end{figure}
 
+\subsection{The quality of batches can be optimized}
+As shown in Table \ref{table:results_text8}, the creation of batches where each word only appears once in a batch outperforms the simple batch version. This shows empiracly that our suspission that words that appear multiple time in a batch hinder performance. Furthermore the deletion of outliers, speeds up training without hindering performance. A reason could be that words that appear very often have mostly the same context words and therefore will have a very similar representation as they learn from the same words. 
+
 \subsection{Future Work}
-This work shows that the convergence time of the SGNS could be improved by using input shuffling and advanced optimizers. As with every work, there still exists possible extensions. First and foremost an aspect of our implementation that can be prejudicial is that we only extensively tested our model with one small dataset. The fact that we only used one dataset as well that it's a small one is problematic. \\ 
+This work shows that the convergence time of the SGNS could be improved by using input shuffling, advanced optimizers and a batched version with specific rules to the creation of the batches. As with every work, there still exists possible extensions. First and foremost an aspect of our implementation that can be prejudicial is that we only extensively tested our model with one small dataset. The fact that we only used one dataset as well that it's a small one is problematic. \\ 
 ~~\textit{Problem with a small dataset:} \\ By using a very small dataset we do not use the model in the condition it is most needed for, as the dataset used in practice usually consists of more than 1 billion words. There is a small argument that can be made for machine translation as the use of small parallel corpus is not unusual in this field. \\
 ~~\textit{Problem with using only one dataset:}\\
 It has been shown that some optimizers perform better with specific shapes of loss functions. To make a compelling argument it's necessary to show that our model with the use of input shuffling and Adam as its optimizer also outperforms Gensim with other data sets.\\
