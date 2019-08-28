@@ -3,6 +3,7 @@
 \section{Results}\label{sec:results}
 As stated in the previous section we ran multiple experiments for each optimizer with the above configuration and datasets. . This Section will  give an overview of the experimental results. Each subsection will give an explanation over the achieved result with a specific optimizer.
 
+\subsection{Simple Batch Version}
 \subsubsection{SGD}
 The first challenge for each optimizer was to find a correct learning rate. As SGD is the optimizer used in Gensim \citep{gensim} we first tried the same learning rate as the default value in Gensim \citep{gensim}, i.e 0.01,  and then performed a random search to find a better one. As expected a bell curve shape resulted, a learning rate that is too high leads to diversion and a learning rate that is too low leads to a training time that is too slow. The best value that we found for the learning rate is $0.0075$. With this setting SGD converged in 11 epochs. The second experiment was to add input shuffling.
 As seen in Figure \ref{fig:results_sgd}, for almost every learning rate the convergence time decreased. Our model, with the best setting, know converges in only 7 epochs. Another interesting fact to point out from Figure \ref{fig:results_sgd} is that with input shuffling we achieved better results with higher learning rates. As for learning rates of $0.01$ and $0.025$ we did converge in 11 epochs with input shuffling but did not converge in 20 epochs without it.
@@ -69,15 +70,22 @@ Adam is the most advanced of all the optimizers used in our experiments and did 
     \label{fig:results_adam_shuffle}
 \end{figure}
 
-    \begin{table}[]
-\begin{tabular}{|l|l|l|}
-\hline
+\subsection{Advanced Batches Version}
+The advanced batched version is largely dependent on the definition of outlier. As shown in Table if the value for outliers is too small then the model convergence into score that is too small. If the threshold is higher training time is increased. We found that 99\% is a good reference value. With this setting our model converged in 1 epoch for the text8 dataset, which is our best result, and 7 for the enwik9 corpus. A recap of all our results with the text8 dataset can be found in Table. 
+
+
+\begin{table}[tb]
+    \caption{Results on the text8 dataset}
+    \begin{tabular}{l r r }
+        \toprule
 Model    & Convergence Time & Word Similarity \\ \hline
-SGD & {11}              & 0.65            \\ \hline
-SGD w/shuffling & {7}              & 0.66            \\ \hline
-Adam & {3}              & 0.66            \\ \hline
-Adam w/ shuffling & {2}              & 0.66      \\ \hline
+SGD & {11}              & 0.65            \\ 
+SGD w/shuffling & {7}              & 0.66            \\ 
+Adam & {3}              & 0.66            \\ 
+Adam w/ shuffling & {2}              & 0.66      \\ 
 Gensim   & 4          & 0.66            \\ \hline
-Adam w/o outliers  & \textbf{1} & 0.66 \\ \hline
+        %
+\textbf{Adam w/o outliers }& \textbf{1} & 0.66 \\  \hline
+\bottomrule
 \end{tabular}
 \end{table}
