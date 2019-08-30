@@ -1,9 +1,11 @@
 
 
 \section{Results}\label{sec:results}
-As stated in the previous section we ran multiple experiments for each optimizer with the above configuration and datasets. . This Section will  give an overview of the experimental results. Each subsection will give an explanation over the achieved result with a specific optimizer.
+As stated in the previous section we ran multiple experiments for each optimizer with the above configuration and datasets . This Section will  give an overview of the experimental results. 
+The Section is structured as follows: The first part will describe the results achieved by our batched version with advanced optimizers and input shuffling the second part will focus on batches with improved quality and the deletion of outliers. 
 
 \subsection{Simple Batch Version}
+This subsection will give an explanation over the achieved results with different optimizers, combined with input shuffling on our batched version of the Skip-Gram Model with negative sampling (SGNS). It will first explain the result achieved with Stochastic Gradient Descent (SGD) followed by the result achieved with adam as optimizers. 
 \subsubsection{SGD}
 The first challenge for each optimizer was to find a correct learning rate. As SGD is the optimizer used in Gensim \citep{gensim} we first tried the same learning rate as the default value in Gensim \citep{gensim}, i.e 0.01,  and then performed a random search to find a better one. As expected a bell curve shape resulted, a learning rate that is too high leads to diversion and a learning rate that is too low leads to a training time that is too slow. The best value that we found for the learning rate is $0.0075$. With this setting SGD converged in 11 epochs. The second experiment was to add input shuffling.
 As seen in Figure \ref{fig:results_sgd}, for almost every learning rate the convergence time decreased. Our model, with the best setting, know converges in only 7 epochs. Another interesting fact to point out from Figure \ref{fig:results_sgd} is that with input shuffling we achieved better results with higher learning rates. As for learning rates of $0.01$ and $0.025$ we did converge in 11 epochs with input shuffling but did not converge in 20 epochs without it.
@@ -69,6 +71,8 @@ Adam is the most advanced of all the optimizers used in our experiments and did 
     \caption{Training time Adam with input Shuffling}
     \label{fig:results_adam_shuffle}
 \end{figure}
+
+This conlcudes the results achieved with arbitrary batches. The following section will cover the results achieved when creating batches that only contains center words once and how the deletion of outliers affect the results. 
 
 \subsection{Advanced Batches Version}
 The advanced batched version is largely dependent on the definition of outlier. As shown in Table if the value for outliers is too small then the model convergence into score that is too small. If the threshold is higher training time is increased. We found that 99\% is a good reference value. With this setting our model converged in 1 epoch for the text8 dataset, which is our best result, and 7 for the enwik9 corpus. A recap of all our results with the text8 dataset can be found in Table. 
