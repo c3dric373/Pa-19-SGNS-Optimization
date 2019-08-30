@@ -75,7 +75,7 @@ Adam is the most advanced of all the optimizers used in our experiments and did 
 This conlcudes the results achieved with arbitrary batches. The following section will cover the results achieved when creating batches that only contains center words once and how the deletion of outliers affect the results. 
 
 \subsection{Advanced Batches Version}
-The advanced batched version is largely dependent on the definition of outlier. As shown in Table if the value for outliers is too small then the model convergence into score that is too small. If the threshold is higher training time is increased. We found that 99\% is a good reference value. With this setting our model converged in 1 epoch for the text8 dataset, which is our best result, and 7 for the enwik9 corpus. A recap of all our results with the text8 dataset can be found in Table. 
+The advanced batched version in combination with the deletion of outliers and Adam as it's optimizer greatly outperformed the other versions. With this setting our model converged in 1 epoch for the text8 dataset, which is our best result. A recap of all our results with the text8 dataset can be found in Table \ref{table:results_text8}. 
 
 
 \begin{table}[tb]
