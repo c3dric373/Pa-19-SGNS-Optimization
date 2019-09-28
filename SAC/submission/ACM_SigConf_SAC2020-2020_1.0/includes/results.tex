@@ -1,11 +1,11 @@
 
 
 \section{Results}\label{sec:results}
-As stated in the previous section we ran multiple experiments for each optimizer with the above configuration and datasets. . This Section will  give an overview of the experimental results. Each subsection will give an explanation over the achieved result with a specific optimizer.
+As stated in the previous section we ran multiple experiments for each optimizer with the above configuration and datasets. This Section will  give an overview of the experimental results. Each subsection will give an explanation over the achieved result with a specific optimizer.
 
 \subsubsection{SGD}
-The first challenge for each optimizer was to find a correct learning rate. As SGD is the optimizer used in Gensim \citep{gensim} we first tried the same learning rate as the default value in Gensim \citep{gensim}, i.e 0.01,  and then performed a random search to find a better one. As expected a bell curve shape resulted, a learning rate that is too high leads to diversion and a learning rate that is too low leads to a training time that is too slow. The best value that we found for the learning rate is $0.0075$. With this setting SGD converged in 11 epochs. The second experiment was to add input shuffling.
-For almost every learning rate the convergence time decreased. Our model, with the best setting, know converges in only 7 epochs. Another interesting fact to point out is that with input shuffling we achieved better results with higher learning rates. As for learning rates of $0.01$ and $0.025$ we did converge in 11 epochs with input shuffling but did not converge in 20 epochs without it.
+The first challenge for each optimizer was to find a correct learning rate. As SGD is the optimizer used in Gensim \citep{gensim} we first tried the same learning rate as the default value in Gensim \citep{gensim}, i.e 0.025,  and then performed a random search to find a better one. As expected a bell curve shape resulted, a learning rate that is too high leads to diversion and a learning rate that is too low leads to a training time that is too slow. The best value that we found for the learning rate is $0.0075$. With this setting SGD converged in 7 epochs. The second experiment was to add input shuffling.
+For almost every learning rate the convergence time decreased. Our model, with the best setting, know converges in only 5 epochs. 
 \iffalse
 \begin{figure}[h]
 \centering
@@ -65,7 +65,7 @@ Another interesting fact to notice is that a higher learning rate combined with 
 \end{figure}
 \fi
 \subsubsection{Adam}
-Adam is the most advanced of all the optimizers used in our experiments and did yield the best results as seen in F. Adam converged in 3 epochs without shuffling and a learning rate of $0.05$ and 2 with shuffling and a learning rate of $0.001$, as shown in Table \ref{table:results}. Those are the best results achieved in any of our experiment. Exacctly as Adagrad, Adamd did not react to input shuffling the same way as SGD did.
+Adam is the most advanced of all the optimizers used in our experiments and did yield the best results as seen in Table \ref{table:results}. Adam converged in 3 epochs without shuffling and a learning rate of $0.05$ and 2 with shuffling and a learning rate of $0.001$, as shown in Table \ref{table:results}. Those are the best results achieved in any of our experiment. Exacctly as Adagrad, Adamd did not react to input shuffling the same way as SGD did.
     \begin{table}[]
 \begin{tabular}{|l|l|l|}
 \hline
