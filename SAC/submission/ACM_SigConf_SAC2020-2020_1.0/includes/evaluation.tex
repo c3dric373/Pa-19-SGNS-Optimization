@@ -72,13 +72,12 @@ $10^{-5}$ & against radicals diggers \\ \hline
 We also deleted every word that did not appear more than 5 times in our dataset. This idea was also introduced by Mikolove et al. \citep{mikolov2}. This is a good technique because of three reasons: First certain words of our data sets do not appear in a common lexicon (twigleg, melqu), or come from a foreign language (Volksvereinigung), or are names and acronyms. Secondly, each document often has spelling mistakes, those would be deleted by sampling too, as the words do not have any meaning. Lastly, a word that only appears one time in our dataset will be very dependent on its original initialization. For all the above reasons, we applied this technique. Similar to subsampling, it will decrease computation time and  should in theory improve the quality of the word embeddings.
 
 \subsection{Evaluating word embedings}
-Evaluating word embedding is not an easy task, such as evaluating the accuracy of a common classifier for example. We cannot split our data set into train and test set. As the task that the network is learning is of no interest to us. Therefore, to ensure the quality of word embeddings other techniques have to be used.To define quality we first need to define a measure of similarity between two vectors. For this task we will use the cosine distance. Two vectors will be judged similiar if they point in the same direction. 
+Evaluating word embedding is not an easy task, such as evaluating the accuracy of a common classifier for example. We cannot split our data set into train and test set. As the task that the network is learning is of no interest to us. Therefore, to ensure the quality of word embeddings other techniques have to be used. To define quality we first need to define a measure of similarity between two vectors. For this task we will use the cosine distance. Two vectors will be judged similiar if they point in the same direction. 
 
 
 \subsubsection{Word similarity and wordsim353}
-Too measure the quality of our word embedding, in question of word similarity we must use a dataset to compare our self too.
+To measure the quality of our word embedding, in question of word similarity we must use a dataset to compare our self too.
  We chose wordsim353\footnote{http://www.cs.technion.ac.il/~gabr/resources/data/wordsim353/wordsim353.zip} for this task, as it's the most used in the related literature. The data set consists of 353 pairs of words rated by humans on their similarity. The similarity score is in the range of 1 and 10, with 10 being the best score. An example for two of such pairs can be found in Table \ref{fig:ws353_ex}. We will rank our embeddings on the Pearson correlation coefficient between the cosine distance and the scores attributed by humans, as this is the common procedure. This concludes our description of the evaluation methods of word embeddings. The next section will present the configuration of our network used to optimize the SGNS.
-\iffalse
 \begin{table}[tb]\centering
 \caption{Example of pairs and their rating in wordsim353}
 \begin{tabular}{l l l }
@@ -92,7 +91,6 @@ Word1 & Word2 & Score \\ \hline
 \end{tabular}
 \label{fig:ws353_ex}
 \end{table}
-\fi
 
 
 \subsection{Configuration of the network}\label{ssec:config}
@@ -104,7 +102,7 @@ The SGNS has a lot of possible parameters, that can be tuned. We experimented wi
 \item \texttt{Batch size}: - \textit{2000}
 \item \texttt{Alpha}:  - \textit{(1e-5,1)}
 \end{itemize}
-This concludes our overview of the possible parameters of our SGNS, in the next section the reader will be given a description about the process of input shuffling.
+This concludes our overview of the possible parameters of our SGNS, in the next subsection the reader will be given a description about the process of input shuffling.
 
 \iffalse
 \begin{table}[h]
@@ -126,7 +124,7 @@ We used input shuffling as a technique to optimize the SGNS.  We will first desc
 
 Let $X = {x_1...x_n}$ be our input data set. Input Shuffling describes the process of taking a random permutation of the dataset as an input at each epoch. The idea behind this technique is to present our optimizer with different  surfaces of our loss function, in order to find the best optimum. Furthermore, it's easier for the neural network to escape a local minimum. As for example if a network, without using shuffling,  had converged to a local minimum after one epoch it probably cannot escape it. But if we change the shape of the loss function, by input shuffling, then there would be a greater probability for the network to escape the local minimum.
 \\
-There are two reasons why we think that input shuffling is particularly well suited for the SGNS. Firstly, we read our words sequentially, therefore,  words that only appear very early in the dataset will not benefit from the context words being already updated from others. The second idea is that we used the special batch technique described in Section \ref{sec:contribution}. When we do not use input shuffling the same word will appear with all of its context words as training samples in a batch, therefore the updae will be an average of all of these training samples. But if we would use input shuffling instead, then the probability of a word appearing multiple time in one batch would be smaller. In consequence the accuracy of the model should be optimized hence, leading to a better convergence time. A definition of convergence time is given in the next section. 
+There are two reasons why we think that input shuffling is particularly well suited for the SGNS. Firstly, we read our words sequentially, therefore,  words that only appear very early in the dataset will not benefit from the context words being already updated from others. The second idea is that we used the special batch technique described in Section \ref{sec:contribution}. When we do not use input shuffling the same word will appear with all of its context words as training samples in a batch, therefore the updae will be an average of all of these training samples. But if we would use input shuffling instead, then the probability of a word appearing multiple time in one batch would be smaller. In consequence the accuracy of the model should be optimized, hence leading to a better convergence time. 
 
 
-To summarize the evaluation, we deleted words that appear very often (subsampling) and very infrequently (min count) from our dataset, i.e text8 dataset. To evaluate the resulting word embeddings we defined the cosine distance, which is 1 minuse the cosine of the angle of two vectors. We will measure the quality of the embeddings by analyzing the correlation of the cosine distance of pairs of vectors to humanly judged similarity score of the corresponding words, and used the wordsim353 to collect these scores. The reader was also given an explanation about the configuration of our network and introduced to the concept of input shuffling. With all this knowledge we can know present the achieved experimental results in the next section.
+To summarize the evaluation, we deleted words that appear very often (subsampling) and very infrequently (min count) from our dataset, i.e text8 dataset. To evaluate the resulting word embeddings we defined the cosine distance, which is 1 minus the cosine of the angle of two vectors. We will measure the quality of the embeddings by analyzing the correlation of the cosine distance of pairs of vectors to humanly judged similarity score of the corresponding words, and used the wordsim353 to collect these scores. The reader was also given an explanation about the configuration of our network and introduced to the concept of input shuffling. With all this knowledge we can know present the achieved experimental results in the next section.
