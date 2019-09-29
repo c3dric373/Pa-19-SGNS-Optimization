@@ -4,7 +4,7 @@
 As stated in the previous section we ran multiple experiments for each optimizer with the above configuration and datasets. This Section will  give an overview of the experimental results. Each subsection will give an explanation over the achieved result with a specific optimizer.
 
 \subsubsection{SGD}
-The first challenge for each optimizer was to find a correct learning rate. As SGD is the optimizer used in Gensim \citep{gensim} we first tried the same learning rate as the default value in Gensim \citep{gensim}, i.e 0.025,  and then performed a random search to find a better one. As expected a bell curve shape resulted, a learning rate that is too high leads to diversion and a learning rate that is too low leads to a training time that is too slow. The best value that we found for the learning rate is $0.006$, as shown in Table \ref{test}. With this setting SGD converged in 7 epochs. The second experiment was to add input shuffling.
+The first challenge for each optimizer was to find a correct learning rate. As SGD is the optimizer used in Gensim \citep{gensim} we first tried the same learning rate as the default value in Gensim \citep{gensim}, i.e 0.025,  and then performed a random search to find a better one. As expected a bell curve shape resulted, a learning rate that is too high leads to diversion and a learning rate that is too low leads to a training time that is too slow. The best value that we found for the learning rate is $0.006$, as shown in Table \ref{test}. With this setting SGD converged in 8 epochs. The second experiment was to add input shuffling.
 For almost every learning rate the convergence time decreased. The best result was a learning rate of $0.0075$ combined with input shuffling where it converged to a similarity value of $0.65$ in 3 epochs, as shown in Table \ref{test}.
 \iffalse
 \begin{figure}[h]
@@ -65,14 +65,14 @@ Another interesting fact to notice is that a higher learning rate combined with 
 \end{figure}
 \fi
 \subsubsection{Adam}
-Adam is the most advanced of all the optimizers used in our experiments and did yield the best results as seen in Table \ref{test}. Adam converged in 4 epochs without shuffling and a learning rate of $0.05$ to a similarity value of 0.66. With input shuffling and a learning rate of $0.001$ Adam converged to a similarity value of 0.67 in 4 epochs, as shown in Table \ref{test}. Those are the best results achieved in any of our experiment. 
+Adam is the most advanced of all the optimizers used in our experiments and did yield the best results as seen in Table \ref{test}. Adam converged in 4 epochs without shuffling and a learning rate of $0.05$ to a similarity value of 0.66. With input shuffling and a learning rate of $0.003$ Adam converged to a similarity value of 0.67 in 4 epochs, as shown in Table \ref{test}. Those are the best results achieved in any of our experiment. 
 
     \begin{table}[]
     \caption{Results on the text8 dataset with different optimizers and input shuffling}
 \begin{tabular}{|l|l|l|}
 \hline
 Model    & Convergence Time & Word Similarity \\ \hline
-SGD & {7}              & 0.66            \\ \hline
+SGD & {8}              & 0.66            \\ \hline
 SGD w/shuffling & {3}              & 0.65     \\ \hline
 Adam & {4}              & 0.67           \\ \hline
 Adam w/ shuffling & \textbf{4}              & 0.66      \\ \hline
